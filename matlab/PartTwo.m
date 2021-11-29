@@ -29,6 +29,12 @@ n_members_windows = length(heaves) / n_windows;
 noverlap = round(n_members_windows * percentage_overlapping / 100);
 [S, f] = spectrum(heaves, length(heaves), noverlap, hanning(n_members_windows), 1 / dt);
 S = 2 * dt * S(:, 1); % Variable S contains the spectrum, variable f the frequency (in Hz)
+% Plot
+figure("name", "Power Spectrum Density from FFT");
+plot(f, S);
+title("Power Spectrum Density from FFT");
+xlabel("w [rad/s]");
+ylabel("S [m^2*s]");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,37 +47,55 @@ S = 2 * dt * S(:, 1); % Variable S contains the spectrum, variable f the frequen
 n_degrees_freedom_barlett = 32;
 n_windows_barlett = fix(length(heaves) / (n_degrees_freedom_barlett / 2));
 n_overlap_barlett = 0;
-[S_barlett, f_barlett] = spectrum(heaves, length(heaves), n_overlap_barlett, hanning(n_windows_barlett), 1 / dt)
+[S_barlett, f_barlett] = spectrum(heaves, length(heaves), n_overlap_barlett, hanning(n_windows_barlett), 1 / dt);
+S_barlett = 2 * dt * S_barlett(:, 1);
+% Plot
+figure("name", "Power Spectrum Density using Barlett Method");
+plot(f_barlett, S_barlett);
+title("Power Spectrum Density using Barlett Method");
+xlabel("w [rad/s]");
+ylabel("S [m^2*s]");
 
 % c) Welch's method
-n_degrees_freedom_welch = 32;
+n_degrees_freedom_welch = 10;
 n_windows_welch = fix(length(heaves) / (n_degrees_freedom_welch / 2));
 percentage_overlapping_welch = 50;
 n_overlap_welch = round(n_windows_welch * percentage_overlapping_welch / 100);
-[S_welch, f_welch] = spectrum(heaves, length(heaves), n_overlap_welch, hanning(n_windows_welch), 1 / dt)
+[S_welch, f_welch] = spectrum(heaves, length(heaves), n_overlap_welch, hanning(n_windows_welch), 1 / dt);
+S_welch = 2 * dt * S_welch(:, 1);
+% Plot
+figure("name", "Power Spectrum Density using Welch Method");
+plot(f_welch, S_welch);
+title("Power Spectrum Density using Welch Method");
+xlabel("w [rad/s]");
+ylabel("S [m^2*s]");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 2.4 - Spectral Parameters from Spectrum obtained with Welch's method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-delta_t = dt * length(f_welch); % Time domain in seconds
-
+delta_t = dt * length(heaves); % Time domain in seconds
 % a) First 4 spectral moments
 m0 = sum(S_welch) * (1 / delta_t);
 m1 = sum(f_welch .* S_welch) * (1 / delta_t);
 m2 = sum(f_welch.^2 .* S_welch) * (1 / delta_t);
 m3 = sum(f_welch.^3 .* S_welch) * (1 / delta_t);
+% disp(m0);
+% disp(m1);
+% disp(m2);
+% disp(m3);
+disp(sum(S_welch))
 
 % b) Spectral Bandwidth Coefficient
-spectral_bandwidth_coeff = (m0 * m2 - m1^2) / m1^2
+spectral_bandwidth_coeff = (m0 * m2 - m1^2) / m1^2;
 
 % c) Peak Period (Tp) and Significant Wave Height (Hs) from spectrum
 [_ peak_energy_index] = max(S_welch); % Peak of the energy spectrum
-Fp = f_welch(peak_energy_index(1)); % Corresponding peak frequency in hertz
-Tp = 1 / fp; % Peak period in seconds
+Fp = f_welch(peak_energy_index); % Corresponding peak frequency in hertz
+Tp = 1 / Fp; % Peak period in seconds
 Hs = 4 * sqrt(m0); % Significant Height in meters
 
 % d) Significant Wave Height comparison with time domain analysis
-Hs_time_domain = 10;
+Hs_time_domain = 0.983; % This was manually inserted. This value is avalaible in the report
 Hs_percentual_discrepancy = abs(Hs_time_domain - Hs) / Hs_time_domain;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

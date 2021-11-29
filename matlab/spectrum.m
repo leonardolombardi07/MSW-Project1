@@ -124,7 +124,6 @@ function [Spec, f] = spectrum(varargin)
     y = y(:);
     k = fix((n - noverlap) / (nwind - noverlap)); % Number of windows
     % (k = fix(n/nwind) for noverlap=0)
-    k
     index = 1:nwind;
     KMU = k * norm(window)^2; % Normalizing scale factor ==> asymptotically unbiased
     % KMU = k*sum(window)^2;% alt. Nrmlzng scale factor ==> peaks are about right
