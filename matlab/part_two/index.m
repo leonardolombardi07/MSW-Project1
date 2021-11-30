@@ -44,7 +44,7 @@ ylabel("S [m^2*s]");
 % a) Daniell's method
 
 % b) Barlett's method
-n_degrees_freedom_barlett = 32;
+n_degrees_freedom_barlett = 2;
 n_windows_barlett = fix(length(heaves) / (n_degrees_freedom_barlett / 2));
 n_overlap_barlett = 0;
 [S_barlett, f_barlett] = spectrum(heaves, length(heaves), n_overlap_barlett, hanning(n_windows_barlett), 1 / dt);
@@ -57,7 +57,7 @@ xlabel("w [rad/s]");
 ylabel("S [m^2*s]");
 
 % c) Welch's method
-n_degrees_freedom_welch = 10;
+n_degrees_freedom_welch = 40;
 n_windows_welch = fix(length(heaves) / (n_degrees_freedom_welch / 2));
 percentage_overlapping_welch = 50;
 n_overlap_welch = round(n_windows_welch * percentage_overlapping_welch / 100);
@@ -92,10 +92,16 @@ spectral_bandwidth_coeff = (m0 * m2 - m1^2) / m1^2;
 Fp = f_welch(peak_energy_index); % Corresponding peak frequency in hertz
 Tp = 1 / Fp; % Peak period in seconds
 Hs = 4 * sqrt(m0); % Significant Height in meters
-disp(Hs);
+fprintf("Significant Height is: %f \n", Hs);
+
 % d) Significant Wave Height comparison with time domain analysis
-Hs_time_domain = 0.983; % This was manually inserted. This value is avalaible in the report
-Hs_percentual_discrepancy = abs(Hs_time_domain - Hs) / Hs_time_domain;
+
+% This value is manually inserted. This value can be obtained by
+% running index.m function of part_one an seeing the significant
+% height value displayed in the console/terminal
+Hs_time_domain = 1.92584;
+Hs_percentual_discrepancy = 100 * abs(Hs_time_domain - Hs) / Hs_time_domain;
+fprintf("Percentual Discrepancy between Hs is: %f\n", Hs_percentual_discrepancy);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 2.5 - Comparing obtained Power Spectrum with Theoretical Spectral Model
