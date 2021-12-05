@@ -1,4 +1,4 @@
-function [periods, heights] = zero_crossing(times, heaves, direction)
+function [periods, heights] = zero_crossing(times, heaves, number_to_find)
     % Zero-crossing analysis of buoy heave data.
 
     % Parameters
@@ -7,8 +7,8 @@ function [periods, heights] = zero_crossing(times, heaves, direction)
     %       instants of heave measurement
     % heaves: double (Nx1) vector
     %       heave measurements for given times.
-    % direction: string scalar
-    %       "up" if using up-crossing, "down" if using down-crossing
+    % number_to_find: integer scalar
+    %       2 if using up-crossing, -2 if using down-crossing
     %       method.
     %
     % Returns
@@ -26,13 +26,6 @@ function [periods, heights] = zero_crossing(times, heaves, direction)
     detrended_heaves = detrend(heaves);
     signals = sign(detrended_heaves);
     diffs = diff(signals);
-
-    if direction == "up"
-        number_to_find = 2
-    else
-        number_to_find = -2
-    endif
-
     crossing_indexes = find(diffs == number_to_find);
 
     periods = []; heights = [];

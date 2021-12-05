@@ -17,6 +17,6 @@ function densities = rayleigh(heights)
     % https://www.usna.edu/NAOE/_files/documents/Courses/EN330/Rayleigh-Probability-Distribution-Applied-to-Random-Wave-Heights.pdf
 
     mean_height_squared = mean(heights)^2;
-    exponential = (-pi / (4 * mean_height_squared)) .* (heights.^2);
+    exponential = exp((-pi / (4 * mean_height_squared)) .* (heights.^2));
     densities = ((pi / (2 * mean_height_squared)) .* heights) .* exponential;
 endfunction

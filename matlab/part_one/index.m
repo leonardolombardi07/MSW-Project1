@@ -29,7 +29,7 @@ end
 
 % We are going to compare empirical obtained heaves with Gaussian and
 % Longuet-Higgins distributions. "heaves" data comes in a unsorted way
-% (like [-0.3, 0.1, -0.15]). To compare with the empirical heaves histogram
+% (like [-0.3, 0.1, -0.15, ...]). To compare with the empirical heaves histogram
 % we need to sort from smallest to biggest value (like [-0.3, -0.15, 0.1, ...])
 sorted_heaves = sort(heaves);
 
@@ -54,26 +54,48 @@ xlabel("Heave [m]");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Up-Crossing
+
+% Obtaining the heights and periods
 [up_crossing_periods, up_crossing_heights] = zero_crossing(times, heaves, 2);
+
+% Empirical Histogram data
 [counts, centers] = hist(up_crossing_heights);
-rayleigh_up = rayleigh(up_crossing_heights);
+
+% We are going to compare wave heights obtained with zero crossing method with
+% Rayleigh distribution. Both up and down crossing obtained heights will be
+% unsorted (like [1.5, 2, 1.3, ...]). To compare with the wave heights histogram
+% we need to sort from smallest to biggest value (like [1.3, 1.5, 2 ...])
+sorted_up_crossing_heights = sort(up_crossing_heights);
+rayleigh_up = rayleigh(sorted_up_crossing_heights);
+
+% Plot
 figure("name", "Comparing Rayleigh distribution to empirical distribution of Wave Heights for zero up-crossing analysis");
-bar(centers, counts / sum(counts * diff(centers(1:2))), 1);
+bar(centers, counts / sum(counts * diff(centers(1:2))), 1); % Empirical
 hold on;
-plot(up_crossing_heights, rayleigh_up);
+plot(sorted_up_crossing_heights, rayleigh_up);
 ylabel ("Density");
 xlabel("Wave Height [m]");
+legend("Empirical", "Rayleigh")
 
 % Down-Crossing
+
+% Obtaining the heights and periods
 [down_crossing_periods, down_crossing_heights] = zero_crossing(times, heaves, -2);
+
+% Empirical Histogram data
 [counts, centers] = hist(down_crossing_heights);
-rayleigh_down = rayleigh(down_crossing_heights);
+
+sorted_down_crossing_heights = sort(down_crossing_heights);
+rayleigh_down = rayleigh(sorted_down_crossing_heights);
+
+% Plot
 figure("name", "Comparing Rayleigh distribution to empirical distribution of Wave Heights for zero down-crossing analysis");
-bar(centers, counts / sum(counts * diff(centers(1:2))), 1);
+bar(centers, counts / sum(counts * diff(centers(1:2))), 1); % Empirical
 hold on;
-plot(down_crossing_heights, rayleigh_down);
+plot(sorted_down_crossing_heights, rayleigh_down);
 ylabel ("Density");
 xlabel("Wave Height [m]");
+legend("Empirical", "Rayleigh");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 1.4 - Significant wave height and significant wave period
