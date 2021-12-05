@@ -26,17 +26,24 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 1.2 - Distribution of Heaves
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-normal_dist = normpdf(heaves, heaveMean, std(heaves));
-longuet_higg = longuet_higgins(heaves);
 
-Plot
+% We are going to compare empirical obtained heaves with Gaussian and
+% Longuet-Higgins distributions. "heaves" data comes in a unsorted way
+% (like [-0.3, 0.1, -0.15]). To compare with the empirical heaves histogram
+% we need to sort from smallest to biggest value (like [-0.3, -0.15, 0.1, ...])
+sorted_heaves = sort(heaves);
+
+normal_dist = normpdf(sorted_heaves, heaveMean, std(heaves));
+longuet_higg = longuet_higgins(sorted_heaves);
+
+% Plot
 figure("name", "Comparing Gaussian and Longuet Higgins distributions to empirical distribution of heaves");
 [counts, centers] = hist(heaves);
 bar(centers, counts / sum(counts * diff(centers(1:2))), 1);
 hold on;
-plot(heaves, normal_dist);
+plot(sorted_heaves, normal_dist);
 hold on;
-plot(heaves, longuet_higg);
+plot(sorted_heaves, longuet_higg);
 title("Comparing Gaussian and Longuet Higgins distributions to empirical distribution of heaves")
 legend("Empirical", "Gaussian", "Longuet-Higgins");
 ylabel ("Density");
